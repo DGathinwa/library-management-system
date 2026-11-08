@@ -1,0 +1,30 @@
+// use prisma-8
+
+enum Role {
+  PATRON
+  LIBRARIAN
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+  role  Role   @default(PATRON)
+}
+
+model Genre {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  books Book[]
+}
+
+model Book {
+  id              Int    @id @default(autoincrement())
+  title           String
+  author          String
+  totalCopies     Int    @default(1)
+  availableCopies Int    @default(1)
+  
+  genreId         Int
+  genre           Genre  @relation(fields: [genreId], references: [id])
+}
