@@ -1,4 +1,11 @@
-// use prisma-8
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 enum Role {
   PATRON
@@ -24,7 +31,6 @@ model Book {
   author          String
   totalCopies     Int    @default(1)
   availableCopies Int    @default(1)
-  
   genreId         Int
   genre           Genre  @relation(fields: [genreId], references: [id])
 }

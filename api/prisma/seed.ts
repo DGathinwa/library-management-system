@@ -1,16 +1,13 @@
-import pkg from '@prisma/client';
-const { PrismaClient } = pkg;
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // 1. Create 4 Genres
   const scifi = await prisma.genre.create({ data: { name: 'Science Fiction' } });
   const fantasy = await prisma.genre.create({ data: { name: 'Fantasy' } });
   const mystery = await prisma.genre.create({ data: { name: 'Mystery' } });
   const history = await prisma.genre.create({ data: { name: 'History' } });
 
-  // 2. Create 15 Books distributed across those genres
-  const booksToCreate = [
+  const books = [
     { title: 'Dune', author: 'Frank Herbert', genreId: scifi.id },
     { title: 'Foundation', author: 'Isaac Asimov', genreId: scifi.id },
     { title: 'Neuromancer', author: 'William Gibson', genreId: scifi.id },
@@ -31,18 +28,11 @@ async function main() {
     { title: '1776', author: 'David McCullough', genreId: history.id },
   ];
 
-  for (const book of booksToCreate) {
+  for (const book of books) {
     await prisma.book.create({ data: book });
   }
-  
-  console.log('Database successfully seeded!');
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .catch((e) => { console.error(e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); });
